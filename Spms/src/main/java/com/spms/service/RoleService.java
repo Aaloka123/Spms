@@ -1,19 +1,27 @@
 package com.spms.service;
 
-import com.spms.entity.Role;
+import com.spms.dto.request.RoleRequestDTO;
+import com.spms.dto.response.RoleResponseDTO;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface RoleService {
 
-    Role saveRole(Role role);
+    // Create a new role
+    RoleResponseDTO saveRole(RoleRequestDTO roleRequestDTO);
 
-    List<Role> getAllRoles();
+    // Retrieve all roles
 
-    Optional<Role> getRoleById(Long id);
 
-    Optional<Role> updateRole(Long id, Role role);
+    List<RoleResponseDTO> getAllRoles();
 
+    // Retrieve a role by its ID
+    RoleResponseDTO getRoleById(Long id);
+
+    // Update an existing role
+    RoleResponseDTO updateRole(Long id, RoleRequestDTO roleRequestDTO);
+
+    // Delete a role
     void deleteRole(Long id);
 }
+

@@ -1,6 +1,7 @@
 package com.spms.controller;
 
-import com.spms.entity.Role;
+import com.spms.dto.request.RoleRequestDTO;
+import com.spms.dto.response.RoleResponseDTO;
 import com.spms.service.RoleService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import java.util.List;
 
 /**
  * REST Controller for Role Management.
+ * Handles HTTP requests related to Role operations.
  */
 @RestController
 @RequestMapping("/api/roles")
@@ -23,45 +25,56 @@ public class RoleController {
         this.roleService = roleService;
     }
 
-    // Create Role
+    /**
+     * Create a new role.
+     */
     @PostMapping
-    public ResponseEntity<Role> createRole(@Valid @RequestBody Role role) {
+    public ResponseEntity<RoleResponseDTO> createRole(
+            @Valid @RequestBody RoleRequestDTO roleRequestDTO) {
 
-        Role savedRole = roleService.saveRole(role);
+        RoleResponseDTO savedRole = roleService.saveRole(roleRequestDTO);
 
         return new ResponseEntity<>(savedRole, HttpStatus.CREATED);
     }
 
-    // Get All Roles
+    /**
+     * Retrieve all roles.
+     */
     @GetMapping
-    public ResponseEntity<List<Role>> getAllRoles() {
+    public ResponseEntity<List<RoleResponseDTO>> getAllRoles() {
 
-        List<Role> roles = roleService.getAllRoles();
+        List<RoleResponseDTO> roles = roleService.getAllRoles();
 
         return ResponseEntity.ok(roles);
     }
 
-    // Get Role by ID
+    /**
+     * Retrieve a role by its ID.
+     */
     @GetMapping("/{id}")
-    public ResponseEntity<Role> getRoleById(@PathVariable Long id) {
+    public ResponseEntity<RoleResponseDTO> getRoleById(@PathVariable Long id) {
 
-        return roleService.getRoleById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        RoleResponseDTO role = roleService.getRoleById(id);
+
+        return ResponseEntity.ok(role);
     }
 
-    // Update Role
+    /**
+     * Update an existing role.
+     */
     @PutMapping("/{id}")
-    public ResponseEntity<Role> updateRole(
+    public ResponseEntity<RoleResponseDTO> updateRole(
             @PathVariable Long id,
-            @Valid @RequestBody Role role) {
+            @Valid @RequestBody RoleRequestDTO roleRequestDTO) {
 
-        return roleService.updateRole(id, role)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        RoleResponseDTO updatedRole = roleService.updateRole(id, roleRequestDTO);
+
+        return ResponseEntity.ok(updatedRole);
     }
 
-    // Delete Role
+    /**
+     * Delete a role by its ID.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteRole(@PathVariable Long id) {
 

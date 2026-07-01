@@ -1,0 +1,27 @@
+package com.spms.repository;
+
+import com.spms.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
+
+    // Check if username already exists
+    boolean existsByUsername(String username);
+
+    // Check if email already exists
+    boolean existsByEmail(String email);
+
+    // Check if phone number already exists
+    boolean existsByPhoneNumber(String phoneNumber);
+
+    // Check username excluding current user
+    boolean existsByUsernameAndIdNot(String username, Long id);
+
+    // Check email excluding current user
+    boolean existsByEmailAndIdNot(String email, Long id);
+
+    // Check phone number excluding current user
+    boolean existsByPhoneNumberAndIdNot(String phoneNumber, Long id);
+}
