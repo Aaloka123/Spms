@@ -4,8 +4,11 @@ import com.spms.dto.request.UserRequestDTO;
 import com.spms.dto.response.UserResponseDTO;
 import com.spms.entity.Role;
 import com.spms.entity.User;
+import com.spms.exception.EmailAlreadyExistsException;
+import com.spms.exception.PhoneNumberAlreadyExistsException;
 import com.spms.exception.RoleNotFoundException;
 import com.spms.exception.UserNotFoundException;
+import com.spms.exception.UsernameAlreadyExistsException;
 import com.spms.mapper.UserMapper;
 import com.spms.repository.RoleRepository;
 import com.spms.repository.UserRepository;
@@ -31,19 +34,19 @@ public class UserServiceImpl implements UserService {
 
         // Check username
         if (userRepository.existsByUsername(requestDTO.getUsername())) {
-            throw new RuntimeException("Username already exists.");
+            throw new UsernameAlreadyExistsException(requestDTO.getUsername());
         }
 
         // Check email
         if (userRepository.existsByEmail(requestDTO.getEmail())) {
-            throw new RuntimeException("Email already exists.");
+            throw new EmailAlreadyExistsException(requestDTO.getEmail());
         }
 
         // Check phone number
         if (requestDTO.getPhoneNumber() != null
                 && userRepository.existsByPhoneNumber(requestDTO.getPhoneNumber())) {
 
-            throw new RuntimeException("Phone number already exists.");
+            throw new PhoneNumberAlreadyExistsException(requestDTO.getPhoneNumber());
         }
 
         // Find role
