@@ -6,7 +6,7 @@ import com.spms.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-//Mapper for converting between User Entity and DTOs
+//Mapper for converting between User Entity and DTOs.
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
