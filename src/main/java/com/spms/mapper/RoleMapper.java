@@ -6,9 +6,8 @@ import com.spms.entity.Role;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
-/**
- * Mapper for converting between Role Entity and DTOs.
- */
+//Mapper for converting between Role Entity and DTOs.
+
 @Mapper(componentModel = "spring")
 public interface RoleMapper {
 

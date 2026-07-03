@@ -51,7 +51,7 @@ public class RoleServiceImpl implements RoleService {
                 .collect(Collectors.toList());
     }
 
-    //etrieve a role by ID.
+    //retrieve a role by ID.
     @Override
     public RoleResponseDTO getRoleById(Long id) {
 

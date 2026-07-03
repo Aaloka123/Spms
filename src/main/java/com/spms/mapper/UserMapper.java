@@ -5,6 +5,7 @@ import com.spms.dto.response.UserResponseDTO;
 import com.spms.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 //Mapper for converting between User Entity and DTOs.
 @Mapper(componentModel = "spring")
@@ -16,5 +17,15 @@ public interface UserMapper {
     // Convert User Entity to UserResponseDTO
     @Mapping(target = "roleName", source = "role.roleName")
     UserResponseDTO toResponseDTO(User user);
+
+    // Update an existing User Entity using UserRequestDTO
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "role", ignore = true)
+    @Mapping(target = "password", ignore = true)
+    @Mapping(target = "enabled", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    void updateEntityFromDTO(UserRequestDTO requestDTO,
+                             @MappingTarget User user);
 
 }

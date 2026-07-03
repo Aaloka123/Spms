@@ -96,7 +96,49 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDTO updateUser(Long id, UserRequestDTO requestDTO) {
 
-        throw new UnsupportedOperationException("Update user will be implemented later.");
+        // Find user by ID
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() ->
+                        new UserNotFoundException(
+                                "User not found with id: " + id));
+
+        // Check username
+        if (userRepository.existsByUsernameAndIdNot(requestDTO.getUsername(), id)) {
+            throw new UsernameAlreadyExistsException(requestDTO.getUsername());
+        }
+
+        // Check email
+        if (userRepository.existsByEmailAndIdNot(requestDTO.getEmail(), id)) {
+            throw new EmailAlreadyExistsException(requestDTO.getEmail());
+        }
+
+        // Check phone number
+        if (requestDTO.getPhoneNumber() != null
+                && userRepository.existsByPhoneNumberAndIdNot(requestDTO.getPhoneNumber(), id)) {
+
+            throw new PhoneNumberAlreadyExistsException(requestDTO.getPhoneNumber());
+        }
+
+        // Find role
+        Role role = roleRepository.findById(requestDTO.getRoleId())
+                .orElseThrow(() ->
+                        new RoleNotFoundException(
+                                "Role not found with id: " + requestDTO.getRoleId()));
+
+        // Update entity using mapper
+        userMapper.updateEntityFromDTO(requestDTO, existingUser);
+
+        // Assign role
+        existingUser.setRole(role);
+
+        // Encode password before saving
+        existingUser.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
+
+        // Save updated user
+        User updatedUser = userRepository.save(existingUser);
+
+        // Return response
+        return userMapper.toResponseDTO(updatedUser);
     }
 
     @Override

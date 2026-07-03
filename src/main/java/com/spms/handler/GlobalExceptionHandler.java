@@ -12,6 +12,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import com.spms.exception.ProductAlreadyExistsException;
+import com.spms.exception.ProductNotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -54,6 +56,29 @@ public class GlobalExceptionHandler {
 
         // Set short title of the error
         problemDetail.setTitle("Role Not Found");
+
+        // Set detailed error message
+        problemDetail.setDetail(ex.getMessage());
+
+        // Set request URI where the error occurred
+        problemDetail.setInstance(java.net.URI.create(request.getRequestURI()));
+
+        // Add custom properties
+        problemDetail.setProperty("timestamp", LocalDateTime.now());
+
+        // Return ProblemDetail
+        return problemDetail;
+    }
+    // Handles ProductNotFoundException
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ProblemDetail handleProductNotFound(ProductNotFoundException ex,
+                                               HttpServletRequest request) {
+
+        // Create ProblemDetail object with HTTP 404 status
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+
+        // Set short title of the error
+        problemDetail.setTitle("Product Not Found");
 
         // Set detailed error message
         problemDetail.setDetail(ex.getMessage());
@@ -126,6 +151,29 @@ public class GlobalExceptionHandler {
 
         // Set short title of the error
         problemDetail.setTitle("Phone Number Already Exists");
+
+        // Set detailed error message
+        problemDetail.setDetail(ex.getMessage());
+
+        // Set request URI where the error occurred
+        problemDetail.setInstance(java.net.URI.create(request.getRequestURI()));
+
+        // Add custom properties
+        problemDetail.setProperty("timestamp", LocalDateTime.now());
+
+        // Return ProblemDetail
+        return problemDetail;
+    }
+    // Handles ProductAlreadyExistsException
+    @ExceptionHandler(ProductAlreadyExistsException.class)
+    public ProblemDetail handleProductAlreadyExists(ProductAlreadyExistsException ex,
+                                                    HttpServletRequest request) {
+
+        // Create ProblemDetail object with HTTP 409 status
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.CONFLICT);
+
+        // Set short title of the error
+        problemDetail.setTitle("Product Already Exists");
 
         // Set detailed error message
         problemDetail.setDetail(ex.getMessage());
