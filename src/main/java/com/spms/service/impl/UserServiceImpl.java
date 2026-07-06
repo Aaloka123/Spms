@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// Service implementation for User operations.
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -29,6 +30,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
+    // Create a new user.
     @Override
     public UserResponseDTO createUser(UserRequestDTO requestDTO) {
 
@@ -71,6 +73,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.toResponseDTO(savedUser);
     }
 
+    // Retrieve all users.
     @Override
     public List<UserResponseDTO> getAllUsers() {
 
@@ -80,6 +83,7 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
+    // Retrieve a user by ID.
     @Override
     public UserResponseDTO getUserById(Long id) {
 
@@ -93,6 +97,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.toResponseDTO(user);
     }
 
+    // Update an existing user.
     @Override
     public UserResponseDTO updateUser(Long id, UserRequestDTO requestDTO) {
 
@@ -141,6 +146,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.toResponseDTO(updatedUser);
     }
 
+    // Delete a user.
     @Override
     public void deleteUser(Long id) {
 

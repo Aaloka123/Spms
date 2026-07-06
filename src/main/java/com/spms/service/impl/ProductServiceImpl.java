@@ -8,24 +8,19 @@ import com.spms.exception.ProductNotFoundException;
 import com.spms.mapper.ProductMapper;
 import com.spms.repository.ProductRepository;
 import com.spms.service.ProductService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-//Service implementation for Product operations.
+// Service implementation for Product operations.
 @Service
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
-
-    // Constructor Injection
-    public ProductServiceImpl(ProductRepository productRepository,
-                              ProductMapper productMapper) {
-        this.productRepository = productRepository;
-        this.productMapper = productMapper;
-    }
 
     @Override
     public ProductResponseDTO createProduct(ProductRequestDTO requestDTO) {
