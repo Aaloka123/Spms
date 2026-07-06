@@ -1,5 +1,6 @@
 package com.spms.controller;
 
+import com.spms.constants.ApiPath;
 import com.spms.dto.request.RoleRequestDTO;
 import com.spms.dto.response.RoleResponseDTO;
 import com.spms.service.RoleService;
@@ -10,24 +11,18 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * REST Controller for Role Management.
- * Handles HTTP requests related to Role operations.
- */
 @RestController
-@RequestMapping("/api/roles")
+@RequestMapping(ApiPath.ROLES)
 public class RoleController {
 
     private final RoleService roleService;
 
-    // Constructor Injection
+    // Constructor injection
     public RoleController(RoleService roleService) {
         this.roleService = roleService;
     }
 
-    /**
-     * Create a new role.
-     */
+    // Create a new role
     @PostMapping
     public ResponseEntity<RoleResponseDTO> createRole(
             @Valid @RequestBody RoleRequestDTO roleRequestDTO) {
@@ -37,9 +32,7 @@ public class RoleController {
         return new ResponseEntity<>(savedRole, HttpStatus.CREATED);
     }
 
-    /**
-     * Retrieve all roles.
-     */
+    // Retrieve all roles
     @GetMapping
     public ResponseEntity<List<RoleResponseDTO>> getAllRoles() {
 
@@ -48,20 +41,16 @@ public class RoleController {
         return ResponseEntity.ok(roles);
     }
 
-    /**
-     * Retrieve a role by its ID.
-     */
+    // Retrieve a role by its ID
     @GetMapping("/{id}")
-    public ResponseEntity<RoleResponseDTO> getRoleById(@PathVariable() Long id) {
+    public ResponseEntity<RoleResponseDTO> getRoleById(@PathVariable Long id) {
 
         RoleResponseDTO role = roleService.getRoleById(id);
 
         return ResponseEntity.ok(role);
     }
 
-    /**
-     * Update an existing role.
-     */
+    // Update an existing role
     @PutMapping("/{id}")
     public ResponseEntity<RoleResponseDTO> updateRole(
             @PathVariable Long id,
@@ -72,9 +61,7 @@ public class RoleController {
         return ResponseEntity.ok(updatedRole);
     }
 
-    /**
-     * Delete a role by its ID.
-     */
+    // Delete a role by its ID
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteRole(@PathVariable Long id) {
 

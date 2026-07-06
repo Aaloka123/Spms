@@ -1,5 +1,6 @@
 package com.spms.controller;
 
+import com.spms.constants.ApiPath;
 import com.spms.dto.request.UserRequestDTO;
 import com.spms.dto.response.UserResponseDTO;
 import com.spms.service.UserService;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping(ApiPath.USERS)
 @RequiredArgsConstructor
 public class UserController {
 

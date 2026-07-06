@@ -1,5 +1,6 @@
 package com.spms.controller;
 
+import com.spms.constants.ApiPath;
 import com.spms.dto.request.ProductRequestDTO;
 import com.spms.dto.response.ProductResponseDTO;
 import com.spms.service.ProductService;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping(ApiPath.PRODUCTS)
 @RequiredArgsConstructor
 public class ProductController {
 
