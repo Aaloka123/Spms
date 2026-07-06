@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.spms.exception.ProductAlreadyExistsException;
 import com.spms.exception.ProductNotFoundException;
+import com.spms.exception.RoleAlreadyExistsException;
+import com.spms.exception.RoleInUseException;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -188,6 +190,54 @@ public class GlobalExceptionHandler {
         return problemDetail;
     }
 
+    // Handles RoleAlreadyExistsException
+    @ExceptionHandler(RoleAlreadyExistsException.class)
+    public ProblemDetail handleRoleAlreadyExists(RoleAlreadyExistsException ex,
+                                                 HttpServletRequest request) {
+
+        // Create ProblemDetail object with HTTP 409 status
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.CONFLICT);
+
+        // Set short title of the error
+        problemDetail.setTitle("Role Already Exists");
+
+        // Set detailed error message
+        problemDetail.setDetail(ex.getMessage());
+
+        // Set request URI where the error occurred
+        problemDetail.setInstance(java.net.URI.create(request.getRequestURI()));
+
+        // Add custom properties
+        problemDetail.setProperty("timestamp", LocalDateTime.now());
+
+        // Return ProblemDetail
+        return problemDetail;
+    }
+
+    // Handles RoleInUseException
+    @ExceptionHandler(RoleInUseException.class)
+    public ProblemDetail handleRoleInUse(RoleInUseException ex,
+                                         HttpServletRequest request) {
+
+        // Create ProblemDetail object with HTTP 409 status
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.CONFLICT);
+
+        // Set short title of the error
+        problemDetail.setTitle("Role In Use");
+
+        // Set detailed error message
+        problemDetail.setDetail(ex.getMessage());
+
+        // Set request URI where the error occurred
+        problemDetail.setInstance(java.net.URI.create(request.getRequestURI()));
+
+        // Add custom properties
+        problemDetail.setProperty("timestamp", LocalDateTime.now());
+
+        // Return ProblemDetail
+        return problemDetail;
+    }
+
     // Handles validation errors (@Valid)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ProblemDetail handleValidationErrors(MethodArgumentNotValidException ex,
@@ -211,7 +261,12 @@ public class GlobalExceptionHandler {
         // Extract field name + error message
         ex.getBindingResult().getAllErrors().forEach(error -> {
 
-            String fieldName = ((FieldError) error).getField();
+            String fieldName;
+            if (error instanceof FieldError fieldError) {
+                fieldName = fieldError.getField();
+            } else {
+                fieldName = error.getObjectName();
+            }
             String message = error.getDefaultMessage();
 
             errors.put(fieldName, message);

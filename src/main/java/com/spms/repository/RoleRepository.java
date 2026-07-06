@@ -14,4 +14,7 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
 
     boolean existsByRoleName(String roleName);
 
+    // Check role name excluding current role
+    boolean existsByRoleNameAndRoleIdNot(String roleName, Long roleId);
+
 }

@@ -3,8 +3,12 @@ package com.spms.service.impl;
 import com.spms.dto.request.RoleRequestDTO;
 import com.spms.dto.response.RoleResponseDTO;
 import com.spms.entity.Role;
+import com.spms.exception.RoleAlreadyExistsException;
+import com.spms.exception.RoleInUseException;
+import com.spms.exception.RoleNotFoundException;
 import com.spms.mapper.RoleMapper;
 import com.spms.repository.RoleRepository;
+import com.spms.repository.UserRepository;
 import com.spms.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,10 +23,16 @@ public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
     private final RoleMapper roleMapper;
+    private final UserRepository userRepository;
 
     // Create a new role.
     @Override
     public RoleResponseDTO saveRole(RoleRequestDTO roleRequestDTO) {
+
+        // Check role name
+        if (roleRepository.existsByRoleName(roleRequestDTO.getRoleName())) {
+            throw new RoleAlreadyExistsException(roleRequestDTO.getRoleName());
+        }
 
         // Convert DTO to Entity
         Role role = roleMapper.toEntity(roleRequestDTO);
@@ -52,7 +62,9 @@ public class RoleServiceImpl implements RoleService {
     public RoleResponseDTO getRoleById(Long id) {
 
         Role role = roleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Role not found with ID: " + id));
+                .orElseThrow(() ->
+                        new RoleNotFoundException(
+                                "Role not found with id: " + id));
 
         return roleMapper.toResponseDTO(role);
     }
@@ -62,7 +74,14 @@ public class RoleServiceImpl implements RoleService {
     public RoleResponseDTO updateRole(Long id, RoleRequestDTO roleRequestDTO) {
 
         Role existingRole = roleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Role not found with ID: " + id));
+                .orElseThrow(() ->
+                        new RoleNotFoundException(
+                                "Role not found with id: " + id));
+
+        // Check role name
+        if (roleRepository.existsByRoleNameAndRoleIdNot(roleRequestDTO.getRoleName(), id)) {
+            throw new RoleAlreadyExistsException(roleRequestDTO.getRoleName());
+        }
 
         // Update entity using mapper
         roleMapper.updateEntityFromDTO(roleRequestDTO, existingRole);
@@ -79,7 +98,14 @@ public class RoleServiceImpl implements RoleService {
     public void deleteRole(Long id) {
 
         Role role = roleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Role not found with ID: " + id));
+                .orElseThrow(() ->
+                        new RoleNotFoundException(
+                                "Role not found with id: " + id));
+
+        // Check if role is assigned to users
+        if (userRepository.existsByRole_RoleId(id)) {
+            throw new RoleInUseException(id);
+        }
 
         roleRepository.delete(role);
     }
