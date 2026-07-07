@@ -1,8 +1,10 @@
 package com.spms.service.impl;
 
+import com.spms.constants.Roles;
 import com.spms.dto.request.RoleRequestDTO;
 import com.spms.dto.response.RoleResponseDTO;
 import com.spms.entity.Role;
+import com.spms.exception.InvalidRoleNameException;
 import com.spms.exception.RoleAlreadyExistsException;
 import com.spms.exception.RoleInUseException;
 import com.spms.exception.RoleNotFoundException;
@@ -28,6 +30,8 @@ public class RoleServiceImpl implements RoleService {
     // Create a new role.
     @Override
     public RoleResponseDTO saveRole(RoleRequestDTO roleRequestDTO) {
+
+        validateAllowedRoleName(roleRequestDTO.getRoleName());
 
         // Check role name
         if (roleRepository.existsByRoleName(roleRequestDTO.getRoleName())) {
@@ -78,6 +82,8 @@ public class RoleServiceImpl implements RoleService {
                         new RoleNotFoundException(
                                 "Role not found with id: " + id));
 
+        validateAllowedRoleName(roleRequestDTO.getRoleName());
+
         // Check role name
         if (roleRepository.existsByRoleNameAndRoleIdNot(roleRequestDTO.getRoleName(), id)) {
             throw new RoleAlreadyExistsException(roleRequestDTO.getRoleName());
@@ -108,5 +114,14 @@ public class RoleServiceImpl implements RoleService {
         }
 
         roleRepository.delete(role);
+    }
+
+    private void validateAllowedRoleName(String roleName) {
+
+        if (!Roles.ADMIN.equals(roleName)
+                && !Roles.PHARMACIST.equals(roleName)
+                && !Roles.USER.equals(roleName)) {
+            throw new InvalidRoleNameException(roleName);
+        }
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import com.spms.exception.InvalidRoleNameException;
 import com.spms.exception.ProductAlreadyExistsException;
 import com.spms.exception.ProductNotFoundException;
 import com.spms.exception.RoleAlreadyExistsException;
@@ -176,6 +177,30 @@ public class GlobalExceptionHandler {
 
         // Set short title of the error
         problemDetail.setTitle("Product Already Exists");
+
+        // Set detailed error message
+        problemDetail.setDetail(ex.getMessage());
+
+        // Set request URI where the error occurred
+        problemDetail.setInstance(java.net.URI.create(request.getRequestURI()));
+
+        // Add custom properties
+        problemDetail.setProperty("timestamp", LocalDateTime.now());
+
+        // Return ProblemDetail
+        return problemDetail;
+    }
+
+    // Handles InvalidRoleNameException
+    @ExceptionHandler(InvalidRoleNameException.class)
+    public ProblemDetail handleInvalidRoleName(InvalidRoleNameException ex,
+                                               HttpServletRequest request) {
+
+        // Create ProblemDetail object with HTTP 400 status
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+
+        // Set short title of the error
+        problemDetail.setTitle("Invalid Role Name");
 
         // Set detailed error message
         problemDetail.setDetail(ex.getMessage());

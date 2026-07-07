@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 // Marks this class as a Spring service
 @Service
@@ -20,6 +21,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     // Loads the user from the database using the username
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
 
         // Finds the user by username

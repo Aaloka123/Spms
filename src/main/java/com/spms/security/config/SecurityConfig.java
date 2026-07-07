@@ -29,7 +29,8 @@ public class SecurityConfig {
 
     // Configures Spring Security filter chain
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                                   DaoAuthenticationProvider authenticationProvider) throws Exception {
 
         http
                 // Disable CSRF for REST APIs
@@ -38,7 +39,6 @@ public class SecurityConfig {
                 // Configure endpoint authorization
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/roles").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/roles/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
                         .anyRequest().authenticated()
@@ -48,7 +48,10 @@ public class SecurityConfig {
                 .formLogin(form -> form.disable())
 
                 // Enable HTTP Basic Authentication
-                .httpBasic(httpBasic -> {});
+                .httpBasic(httpBasic -> {})
+
+                // Use custom authentication provider
+                .authenticationProvider(authenticationProvider);
 
         return http.build();
     }
