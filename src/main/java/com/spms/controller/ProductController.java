@@ -38,7 +38,7 @@ public class ProductController {
     @PreAuthorize("hasAnyAuthority('ADMIN','PHARMACIST','USER')")
     public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
 
-        return ResponseEntity.ok(productService.getAllProducts());git
+        return ResponseEntity.ok(productService.getAllProducts());
     }
 
     // Get product by ID
