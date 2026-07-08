@@ -17,4 +17,7 @@ public final class ApiPath {
     // Base API path for Product module.
     public static final String PRODUCTS = "/api/products";
 
+    //Base URL path for the Authentication modules
+    public static final String AUTH = "/api/auth";
+
 }

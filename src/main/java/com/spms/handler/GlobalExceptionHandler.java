@@ -3,6 +3,7 @@ package com.spms.handler;
 import com.spms.exception.EmailAlreadyExistsException;
 import com.spms.exception.PhoneNumberAlreadyExistsException;
 import com.spms.exception.RoleNotFoundException;
+import org.springframework.security.access.AccessDeniedException;
 import com.spms.exception.UserNotFoundException;
 import com.spms.exception.UsernameAlreadyExistsException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -299,6 +300,30 @@ public class GlobalExceptionHandler {
 
         // Add validation errors as custom property
         problemDetail.setProperty("errors", errors);
+
+        // Add timestamp
+        problemDetail.setProperty("timestamp", LocalDateTime.now());
+
+        // Return ProblemDetail
+        return problemDetail;
+    }
+    // Handles AccessDeniedException (403 Forbidden)
+    @ExceptionHandler(AccessDeniedException.class)
+    public ProblemDetail handleAccessDeniedException(
+            AccessDeniedException ex,
+            HttpServletRequest request) {
+
+        // Create ProblemDetail object with HTTP 403 status
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.FORBIDDEN);
+
+        // Set short title of the error
+        problemDetail.setTitle("Access Denied");
+
+        // Set detailed error message
+        problemDetail.setDetail("You do not have permission to access this resource.");
+
+        // Set request URI where the error occurred
+        problemDetail.setInstance(java.net.URI.create(request.getRequestURI()));
 
         // Add timestamp
         problemDetail.setProperty("timestamp", LocalDateTime.now());

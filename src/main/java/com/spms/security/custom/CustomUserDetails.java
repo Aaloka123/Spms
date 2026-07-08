@@ -22,6 +22,9 @@ public class CustomUserDetails implements UserDetails {
     // Returns the user's role as a GrantedAuthority
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+
+        System.out.println("Logged in user: " + user.getUsername());
+        System.out.println("Role from DB: " + user.getRole().getRoleName());
         return List.of(
                 new SimpleGrantedAuthority(user.getRole().getRoleName())
         );
