@@ -7,6 +7,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
+import java.util.List;
+
 //Mapper for converting between Product Entity and DTOs.
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
@@ -16,6 +18,9 @@ public interface ProductMapper {
 
     // Convert Product Entity to ProductResponseDTO
     ProductResponseDTO toResponseDTO(Product product);
+
+    // Convert list of Product entities to list of ProductResponseDTO
+    List<ProductResponseDTO> toResponseDTOList(List<Product> products);
 
     // Update existing Product Entity from RequestDTO
     @Mapping(target = "id", ignore = true)

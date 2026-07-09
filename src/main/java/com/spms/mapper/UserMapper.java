@@ -7,6 +7,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
+import java.util.List;
+
 //Mapper for converting between User Entity and DTOs.
 @Mapper(componentModel = "spring")
 public interface UserMapper {
@@ -17,6 +19,9 @@ public interface UserMapper {
     // Convert User Entity to UserResponseDTO
     @Mapping(target = "roleName", source = "role.roleName")
     UserResponseDTO toResponseDTO(User user);
+
+    // Convert list of User entities to list of UserResponseDTO
+    List<UserResponseDTO> toResponseDTOList(List<User> users);
 
     // Update an existing User Entity using UserRequestDTO
     @Mapping(target = "id", ignore = true)

@@ -18,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 // Service implementation for User operations.
 @Service
@@ -77,10 +76,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserResponseDTO> getAllUsers() {
 
-        return userRepository.findAll()
-                .stream()
-                .map(userMapper::toResponseDTO)
-                .collect(Collectors.toList());
+        return userMapper.toResponseDTOList(userRepository.findAll());
     }
 
     // Retrieve a user by ID.

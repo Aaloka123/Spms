@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 // Service implementation for Product operations.
 @Service
@@ -43,10 +42,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductResponseDTO> getAllProducts() {
 
-        return productRepository.findAll()
-                .stream()
-                .map(productMapper::toResponseDTO)
-                .collect(Collectors.toList());
+        return productMapper.toResponseDTOList(productRepository.findAll());
     }
 
     @Override

@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 // Service implementation for Role operations.
 @Service
@@ -38,11 +37,8 @@ public class RoleServiceImpl implements RoleService {
             throw new RoleAlreadyExistsException(roleRequestDTO.getRoleName());
         }
 
-        // Convert DTO to Entity
+        // Convert DTO to Entity using MapStruct
         Role role = roleMapper.toEntity(roleRequestDTO);
-
-        // Ensure a new record is created
-        role.setRoleId(null);
 
         // Save Entity
         Role savedRole = roleRepository.save(role);
@@ -55,10 +51,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public List<RoleResponseDTO> getAllRoles() {
 
-        return roleRepository.findAll()
-                .stream()
-                .map(roleMapper::toResponseDTO)
-                .collect(Collectors.toList());
+        return roleMapper.toResponseDTOList(roleRepository.findAll());
     }
 
     // Retrieve a role by ID.
