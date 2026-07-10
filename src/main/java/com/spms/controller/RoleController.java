@@ -5,6 +5,7 @@ import com.spms.dto.request.RoleRequestDTO;
 import com.spms.dto.response.RoleResponseDTO;
 import com.spms.service.RoleService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,14 +14,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping(ApiPath.ROLES)
+@RequiredArgsConstructor
 public class RoleController {
 
     private final RoleService roleService;
-
-    // Constructor injection
-    public RoleController(RoleService roleService) {
-        this.roleService = roleService;
-    }
 
     // Create a new role
     @PostMapping

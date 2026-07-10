@@ -1,6 +1,7 @@
 package com.spms.security.custom;
 
 import com.spms.entity.User;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 // Represents the logged-in user for Spring Security
+@Getter
 public class CustomUserDetails implements UserDetails {
 
     // Stores the application's User entity
@@ -22,9 +24,6 @@ public class CustomUserDetails implements UserDetails {
     // Returns the user's role as a GrantedAuthority
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-
-        System.out.println("Logged in user: " + user.getUsername());
-        System.out.println("Role from DB: " + user.getRole().getRoleName());
         return List.of(
                 new SimpleGrantedAuthority(user.getRole().getRoleName())
         );
@@ -66,8 +65,4 @@ public class CustomUserDetails implements UserDetails {
         return Boolean.TRUE.equals(user.getEnabled());
     }
 
-    // Returns the complete User entity
-    public User getUser() {
-        return user;
-    }
 }

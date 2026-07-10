@@ -1,7 +1,6 @@
 package com.spms.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +22,6 @@ public class Role {
     @Column(name = "role_id", nullable = false, unique = true)
     private Long roleId;
 
-    @NotBlank
     @Column(name = "role_name", nullable = false, unique = true, length = 100)
     private String roleName;
 
