@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+
 // Represents the logged-in user for Spring Security
 @Getter
 public class CustomUserDetails implements UserDetails {

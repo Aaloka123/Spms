@@ -17,4 +17,6 @@ public class LoginResponseDTO {
 
     private String role;
 
+    private String token; //Jwt token returned form login
+
 }
