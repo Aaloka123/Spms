@@ -1,6 +1,10 @@
 package com.spms.security.jwt;
 
+import com.spms.exception.InvalidTokenException;
+import com.spms.exception.TokenExpiredException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,11 +54,19 @@ public class JwtService {
 
     // Parse and read all claims from token
     private Claims extractAllClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(getSigningKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+        try {
+            return Jwts.parser()
+                    .verifyWith(getSigningKey())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+
+        } catch (ExpiredJwtException ex) {
+            throw new TokenExpiredException();
+
+        } catch (JwtException ex) {
+            throw new InvalidTokenException();
+        }
     }
 
     // Check token is not expired

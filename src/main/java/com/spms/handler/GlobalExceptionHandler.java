@@ -1,23 +1,15 @@
 package com.spms.handler;
 
-import com.spms.exception.EmailAlreadyExistsException;
-import com.spms.exception.PhoneNumberAlreadyExistsException;
-import com.spms.exception.RoleNotFoundException;
+import com.spms.exception.*;
 import org.springframework.security.access.AccessDeniedException;
-import com.spms.exception.UserNotFoundException;
-import com.spms.exception.UsernameAlreadyExistsException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import com.spms.exception.InvalidRoleNameException;
-import com.spms.exception.ProductAlreadyExistsException;
-import com.spms.exception.ProductNotFoundException;
-import com.spms.exception.RoleAlreadyExistsException;
-import com.spms.exception.RoleInUseException;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -353,6 +345,65 @@ public class GlobalExceptionHandler {
         problemDetail.setProperty("timestamp", LocalDateTime.now());
 
         // Return ProblemDetail
+        return problemDetail;
+    }
+    // Wrong username or password at login
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ProblemDetail handleInvalidCredentials(
+            InvalidCredentialsException ex,
+            HttpServletRequest request) {
+
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.UNAUTHORIZED);
+        problemDetail.setTitle("Authentication Failed");
+        problemDetail.setDetail(ex.getMessage());
+        problemDetail.setInstance(java.net.URI.create(request.getRequestURI()));
+        problemDetail.setProperty("timestamp", LocalDateTime.now());
+
+        return problemDetail;
+    }
+
+    // JWT token expired
+    @ExceptionHandler(TokenExpiredException.class)
+    public ProblemDetail handleTokenExpired(
+            TokenExpiredException ex,
+            HttpServletRequest request) {
+
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.UNAUTHORIZED);
+        problemDetail.setTitle("Token Expired");
+        problemDetail.setDetail(ex.getMessage());
+        problemDetail.setInstance(java.net.URI.create(request.getRequestURI()));
+        problemDetail.setProperty("timestamp", LocalDateTime.now());
+
+        return problemDetail;
+    }
+
+    // Invalid or malformed JWT token
+    @ExceptionHandler(InvalidTokenException.class)
+    public ProblemDetail handleInvalidToken(
+            InvalidTokenException ex,
+            HttpServletRequest request) {
+
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.UNAUTHORIZED);
+        problemDetail.setTitle("Invalid Token");
+        problemDetail.setDetail(ex.getMessage());
+        problemDetail.setInstance(java.net.URI.create(request.getRequestURI()));
+        problemDetail.setProperty("timestamp", LocalDateTime.now());
+
+        return problemDetail;
+    }
+
+    // No token on protected endpoint
+    @ExceptionHandler(InsufficientAuthenticationException.class)
+    public ProblemDetail handleInsufficientAuthentication(
+            InsufficientAuthenticationException ex,
+            HttpServletRequest request) {
+
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.UNAUTHORIZED);
+        problemDetail.setTitle("Unauthorized");
+        problemDetail.setDetail("Authentication token is missing or invalid.");
+        problemDetail.setInstance(java.net.URI.create(request.getRequestURI()));
+        problemDetail.setProperty("timestamp", LocalDateTime.now());
+
         return problemDetail;
     }
 }
