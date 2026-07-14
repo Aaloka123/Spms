@@ -43,6 +43,8 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(ApiPath.AUTH + "/login").permitAll()
+                        .requestMatchers(ApiPath.AUTH + "/refresh").permitAll()
+                        .requestMatchers(ApiPath.AUTH + "/logout").permitAll()
                         .requestMatchers(HttpMethod.GET, ApiPath.ROLES + "/**").permitAll()
                         .requestMatchers(HttpMethod.POST, ApiPath.USERS).permitAll()
                         .anyRequest().authenticated()

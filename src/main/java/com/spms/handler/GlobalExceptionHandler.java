@@ -392,6 +392,21 @@ public class GlobalExceptionHandler {
         return problemDetail;
     }
 
+    // Invalid or expired refresh token
+    @ExceptionHandler(InvalidRefreshTokenException.class)
+    public ProblemDetail handleInvalidRefreshToken(
+            InvalidRefreshTokenException ex,
+            HttpServletRequest request) {
+
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.UNAUTHORIZED);
+        problemDetail.setTitle("Invalid Refresh Token");
+        problemDetail.setDetail(ex.getMessage());
+        problemDetail.setInstance(java.net.URI.create(request.getRequestURI()));
+        problemDetail.setProperty("timestamp", LocalDateTime.now());
+
+        return problemDetail;
+    }
+
     // No token on protected endpoint
     @ExceptionHandler(InsufficientAuthenticationException.class)
     public ProblemDetail handleInsufficientAuthentication(

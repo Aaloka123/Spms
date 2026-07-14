@@ -17,6 +17,7 @@ public class LoginResponseDTO {
 
     private String role;
 
-    private String token; //Jwt token returned form login
+    private String accessToken; //short lives
 
+    private String refreshToken;//long lived
 }

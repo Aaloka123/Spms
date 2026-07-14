@@ -11,48 +11,65 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.SecretKey;//cryptographic key used to sign and verify JWTS
-import java.nio.charset.StandardCharsets;//convert secret string to bytes
-import java.util.Date;//current time , issuedAt and expiration
-import java.util.function.Function;//passing a method as a parameter
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import java.util.function.Function;
 
 @Service
 public class JwtService {
 
+    private static final String TOKEN_TYPE = "tokenType";
+    private static final String ACCESS = "ACCESS";
+    private static final String REFRESH = "REFRESH";
+
     @Value("${jwt.secret}")
     private String secretKey;
 
-    @Value("${jwt.expiration}")
-    private long jwtExpiration;
+    @Value("${jwt.access.expiration}")
+    private long accessExpiration;
 
-    // Create signing key from secret
+    @Value("${jwt.refresh.expiration}")
+    private long refreshExpiration;
+
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    // Generate token after successful login
-    public String generateToken(UserDetails userDetails) {
+    // Short-lived token for API calls
+    public String generateAccessToken(UserDetails userDetails) {
+        return buildToken(userDetails, accessExpiration, ACCESS);
+    }
+
+    // Long-lived token for getting new access token
+    public String generateRefreshToken(UserDetails userDetails) {
+        return buildToken(userDetails, refreshExpiration, REFRESH);
+    }
+
+    private String buildToken(UserDetails userDetails, long expiration, String tokenType) {
         return Jwts.builder()
                 .subject(userDetails.getUsername())
                 .claim("role", userDetails.getAuthorities().iterator().next().getAuthority())
+                .claim(TOKEN_TYPE, tokenType)
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSigningKey())
                 .compact();
     }
 
-    // Extract username from token
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    // Extract any claim from token
+    public String extractTokenType(String token) {
+        return extractClaim(token, claims -> claims.get(TOKEN_TYPE, String.class));
+    }
+
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
-    // Parse and read all claims from token
     private Claims extractAllClaims(String token) {
         try {
             return Jwts.parser()
@@ -69,10 +86,22 @@ public class JwtService {
         }
     }
 
-    // Check token is not expired
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        String username = extractUsername(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+    // Validate access token on API requests
+    public boolean isAccessTokenValid(String token, UserDetails userDetails) {
+        return ACCESS.equals(extractTokenType(token))
+                && usernameMatches(token, userDetails)
+                && !isTokenExpired(token);
+    }
+
+    // Validate refresh token on /refresh endpoint
+    public boolean isRefreshTokenValid(String token, UserDetails userDetails) {
+        return REFRESH.equals(extractTokenType(token))
+                && usernameMatches(token, userDetails)
+                && !isTokenExpired(token);
+    }
+
+    private boolean usernameMatches(String token, UserDetails userDetails) {
+        return extractUsername(token).equals(userDetails.getUsername());
     }
 
     private boolean isTokenExpired(String token) {
