@@ -19,50 +19,28 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    private static final String TOKEN_TYPE = "tokenType";
-    private static final String ACCESS = "ACCESS";
-    private static final String REFRESH = "REFRESH";
-
     @Value("${jwt.secret}")
     private String secretKey;
 
-    @Value("${jwt.access.expiration}")
-    private long accessExpiration;
-
-    @Value("${jwt.refresh.expiration}")
-    private long refreshExpiration;
+    @Value("${jwt.expiration}")
+    private long jwtExpiration;
 
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    // Short-lived token for API calls
-    public String generateAccessToken(UserDetails userDetails) {
-        return buildToken(userDetails, accessExpiration, ACCESS);
-    }
-
-    // Long-lived token for getting new access token
-    public String generateRefreshToken(UserDetails userDetails) {
-        return buildToken(userDetails, refreshExpiration, REFRESH);
-    }
-
-    private String buildToken(UserDetails userDetails, long expiration, String tokenType) {
+    public String generateToken(UserDetails userDetails) {
         return Jwts.builder()
                 .subject(userDetails.getUsername())
                 .claim("role", userDetails.getAuthorities().iterator().next().getAuthority())
-                .claim(TOKEN_TYPE, tokenType)
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + expiration))
+                .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .signWith(getSigningKey())
                 .compact();
     }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
-    }
-
-    public String extractTokenType(String token) {
-        return extractClaim(token, claims -> claims.get(TOKEN_TYPE, String.class));
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -86,22 +64,9 @@ public class JwtService {
         }
     }
 
-    // Validate access token on API requests
-    public boolean isAccessTokenValid(String token, UserDetails userDetails) {
-        return ACCESS.equals(extractTokenType(token))
-                && usernameMatches(token, userDetails)
+    public boolean isTokenValid(String token, UserDetails userDetails) {
+        return extractUsername(token).equals(userDetails.getUsername())
                 && !isTokenExpired(token);
-    }
-
-    // Validate refresh token on /refresh endpoint
-    public boolean isRefreshTokenValid(String token, UserDetails userDetails) {
-        return REFRESH.equals(extractTokenType(token))
-                && usernameMatches(token, userDetails)
-                && !isTokenExpired(token);
-    }
-
-    private boolean usernameMatches(String token, UserDetails userDetails) {
-        return extractUsername(token).equals(userDetails.getUsername());
     }
 
     private boolean isTokenExpired(String token) {

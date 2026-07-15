@@ -2,7 +2,6 @@ package com.spms.controller;
 
 import com.spms.constants.ApiPath;
 import com.spms.dto.request.LoginRequestDTO;
-import com.spms.dto.request.RefreshTokenRequestDTO;
 import com.spms.dto.response.LoginResponseDTO;
 import com.spms.service.AuthService;
 import jakarta.validation.Valid;
@@ -10,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-// REST controller responsible for authentication.
 @RestController
 @RequestMapping(ApiPath.AUTH)
 @RequiredArgsConstructor
@@ -18,30 +16,12 @@ public class AuthController {
 
     private final AuthService authService;
 
-    // Authenticates a user using Spring Security
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(
             @Valid @RequestBody LoginRequestDTO loginRequestDTO) {
 
         LoginResponseDTO response = authService.login(loginRequestDTO);
 
-
         return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/refresh")
-    public ResponseEntity<LoginResponseDTO> refreshToken(
-            @Valid @RequestBody RefreshTokenRequestDTO request) {
-
-        return ResponseEntity.ok(authService.refreshToken(request));
-    }
-
-    @PostMapping("/logout")
-    public ResponseEntity<String> logout(
-            @Valid @RequestBody RefreshTokenRequestDTO request) {
-
-        authService.logout(request);
-
-        return ResponseEntity.ok("Logged out successfully.");
     }
 }

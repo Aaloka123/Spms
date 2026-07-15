@@ -17,7 +17,5 @@ public class LoginResponseDTO {
 
     private String role;
 
-    private String accessToken; //short lives
-
-    private String refreshToken;//long lived
+    private String accessToken;
 }

@@ -37,14 +37,12 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
 
-                // NEW — no sessions, stateless (JWT)
+                //  no sessions, stateless (JWT)
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(ApiPath.AUTH + "/login").permitAll()
-                        .requestMatchers(ApiPath.AUTH + "/refresh").permitAll()
-                        .requestMatchers(ApiPath.AUTH + "/logout").permitAll()
                         .requestMatchers(HttpMethod.GET, ApiPath.ROLES + "/**").permitAll()
                         .requestMatchers(HttpMethod.POST, ApiPath.USERS).permitAll()
                         .anyRequest().authenticated()
