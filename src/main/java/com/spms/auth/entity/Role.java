@@ -1,4 +1,4 @@
-package com.spms.entity;
+package com.spms.auth.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

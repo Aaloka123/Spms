@@ -2,26 +2,28 @@ package com.spms.service.impl;
 
 import com.spms.dto.request.UserRequestDTO;
 import com.spms.dto.response.UserResponseDTO;
-import com.spms.entity.Role;
-import com.spms.entity.User;
+import com.spms.auth.entity.Role;
+import com.spms.auth.entity.User;
 import com.spms.exception.EmailAlreadyExistsException;
 import com.spms.exception.PhoneNumberAlreadyExistsException;
 import com.spms.exception.RoleNotFoundException;
 import com.spms.exception.UserNotFoundException;
 import com.spms.exception.UsernameAlreadyExistsException;
 import com.spms.mapper.UserMapper;
-import com.spms.repository.RoleRepository;
-import com.spms.repository.UserRepository;
+import com.spms.auth.repository.RoleRepository;
+import com.spms.auth.repository.UserRepository;
 import com.spms.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 // Service implementation for User operations.
 @Service
 @RequiredArgsConstructor
+@Transactional(transactionManager = "authTransactionManager")
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;

@@ -38,6 +38,7 @@ public class AuthServiceImpl implements AuthService {
 
             return new LoginResponseDTO(
                     "Login successful",
+                    userDetails.getUser().getId(),
                     userDetails.getUsername(),
                     userDetails.getUser().getRole().getRoleName(),
                     accessToken

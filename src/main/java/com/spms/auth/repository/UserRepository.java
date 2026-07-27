@@ -1,6 +1,6 @@
-package com.spms.repository;
+package com.spms.auth.repository;
 
-import com.spms.entity.User;
+import com.spms.auth.entity.User;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

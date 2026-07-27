@@ -3,23 +3,25 @@ package com.spms.service.impl;
 import com.spms.constants.Roles;
 import com.spms.dto.request.RoleRequestDTO;
 import com.spms.dto.response.RoleResponseDTO;
-import com.spms.entity.Role;
+import com.spms.auth.entity.Role;
 import com.spms.exception.InvalidRoleNameException;
 import com.spms.exception.RoleAlreadyExistsException;
 import com.spms.exception.RoleInUseException;
 import com.spms.exception.RoleNotFoundException;
 import com.spms.mapper.RoleMapper;
-import com.spms.repository.RoleRepository;
-import com.spms.repository.UserRepository;
+import com.spms.auth.repository.RoleRepository;
+import com.spms.auth.repository.UserRepository;
 import com.spms.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 // Service implementation for Role operations.
 @Service
 @RequiredArgsConstructor
+@Transactional(transactionManager = "authTransactionManager")
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;

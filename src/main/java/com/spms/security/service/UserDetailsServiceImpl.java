@@ -1,7 +1,7 @@
 package com.spms.security.service;
 
-import com.spms.entity.User;
-import com.spms.repository.UserRepository;
+import com.spms.auth.entity.User;
+import com.spms.auth.repository.UserRepository;
 import com.spms.security.custom.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 // Marks this class as a Spring service
 @Service
 @RequiredArgsConstructor
+@Transactional(transactionManager = "authTransactionManager", readOnly = true)
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     // Injects the UserRepository

@@ -2,6 +2,7 @@ package com.spms.security.jwt;
 
 import com.spms.exception.InvalidTokenException;
 import com.spms.exception.TokenExpiredException;
+import com.spms.security.custom.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -32,6 +33,7 @@ public class JwtService {
     public String generateToken(UserDetails userDetails) {
         return Jwts.builder()
                 .subject(userDetails.getUsername())
+                .claim("userId", ((CustomUserDetails) userDetails).getUser().getId())
                 .claim("role", userDetails.getAuthorities().iterator().next().getAuthority())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + jwtExpiration))

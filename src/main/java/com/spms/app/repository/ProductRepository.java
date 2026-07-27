@@ -1,6 +1,6 @@
-package com.spms.repository;
+package com.spms.app.repository;
 
-import com.spms.entity.Product;
+import com.spms.app.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

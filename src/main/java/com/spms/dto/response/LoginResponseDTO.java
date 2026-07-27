@@ -13,6 +13,8 @@ public class LoginResponseDTO {
 
     private String message;
 
+    private Long userId;
+
     private String username;
 
     private String role;

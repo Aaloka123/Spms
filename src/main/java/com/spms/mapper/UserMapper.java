@@ -2,7 +2,7 @@ package com.spms.mapper;
 
 import com.spms.dto.request.UserRequestDTO;
 import com.spms.dto.response.UserResponseDTO;
-import com.spms.entity.User;
+import com.spms.auth.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

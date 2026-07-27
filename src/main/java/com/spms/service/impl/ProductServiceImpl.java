@@ -2,11 +2,11 @@ package com.spms.service.impl;
 
 import com.spms.dto.request.ProductRequestDTO;
 import com.spms.dto.response.ProductResponseDTO;
-import com.spms.entity.Product;
+import com.spms.app.entity.Product;
 import com.spms.exception.ProductAlreadyExistsException;
 import com.spms.exception.ProductNotFoundException;
 import com.spms.mapper.ProductMapper;
-import com.spms.repository.ProductRepository;
+import com.spms.app.repository.ProductRepository;
 import com.spms.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

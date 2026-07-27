@@ -2,7 +2,7 @@ package com.spms.mapper;
 
 import com.spms.dto.request.ProductRequestDTO;
 import com.spms.dto.response.ProductResponseDTO;
-import com.spms.entity.Product;
+import com.spms.app.entity.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

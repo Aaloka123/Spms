@@ -2,7 +2,7 @@ package com.spms.mapper;
 
 import com.spms.dto.request.RoleRequestDTO;
 import com.spms.dto.response.RoleResponseDTO;
-import com.spms.entity.Role;
+import com.spms.auth.entity.Role;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
