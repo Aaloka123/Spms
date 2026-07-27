@@ -1,7 +1,8 @@
 package com.spms.config;
 
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.zaxxer.hikari.HikariDataSource;
 import jakarta.persistence.EntityManagerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.autoconfigure.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
@@ -39,11 +40,13 @@ public class AuthDataSourceConfig {
        return new DataSourceProperties();
     }
 
-    // Creates the actual connection pool to spms_auth_db
+    // Creates a custom HikariCP pool for spms_auth_db
     @Bean
-    public DataSource authDataSource(){
+    @ConfigurationProperties("spring.datasource.auth.hikari")
+    public DataSource authDataSource() {
         return authDataSourceProperties()
                 .initializeDataSourceBuilder()
+                .type(HikariDataSource.class)
                 .build();
     }
 

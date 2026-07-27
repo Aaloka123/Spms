@@ -1,5 +1,6 @@
 package com.spms.config;
 
+import com.zaxxer.hikari.HikariDataSource;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -36,9 +37,11 @@ public class AppDataSourceConfig {
 
     @Bean
     @Primary
+    @ConfigurationProperties("spring.datasource.app.hikari")
     public DataSource appDataSource() {
         return appDataSourceProperties()
                 .initializeDataSourceBuilder()
+                .type(HikariDataSource.class)
                 .build();
     }
 
