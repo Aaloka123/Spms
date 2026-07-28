@@ -406,4 +406,29 @@ public class GlobalExceptionHandler {
 
         return problemDetail;
     }
+    // Handles VendorNotFoundException (404)
+    @ExceptionHandler(VendorNotFoundException.class)
+    public ProblemDetail handleVendorNotFound(VendorNotFoundException ex,
+                                              HttpServletRequest request) {
+
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+        problemDetail.setTitle("Vendor Not Found");
+        problemDetail.setDetail(ex.getMessage());
+        problemDetail.setInstance(java.net.URI.create(request.getRequestURI()));
+        problemDetail.setProperty("timestamp", LocalDateTime.now());
+        return problemDetail;
+    }
+
+    // Handles VendorAlreadyExistsException (409)
+    @ExceptionHandler(VendorAlreadyExistsException.class)
+    public ProblemDetail handleVendorAlreadyExists(VendorAlreadyExistsException ex,
+                                                   HttpServletRequest request) {
+
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.CONFLICT);
+        problemDetail.setTitle("Vendor Already Exists");
+        problemDetail.setDetail(ex.getMessage());
+        problemDetail.setInstance(java.net.URI.create(request.getRequestURI()));
+        problemDetail.setProperty("timestamp", LocalDateTime.now());
+        return problemDetail;
+    }
 }

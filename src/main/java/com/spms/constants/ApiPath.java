@@ -20,4 +20,8 @@ public final class ApiPath {
     //Base URL path for the Authentication modules
     public static final String AUTH = "/api/auth";
 
+    public static final String VENDORS = "/api/vendors";
+
+    public static final String REPORTS = "/api/reports";
+
 }
